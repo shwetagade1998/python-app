@@ -1,0 +1,36 @@
+name: python CI pipeline
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  test-application:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: python install
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      
+      - name: install dependency
+        run: pip install -r requirements.txt
+
+      - name: check python syntax
+        run: python -m py_compile app.py
+
+  build-docker-image:
+    needs: test-application
+    runs-on: ubuntu-latest
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v4
+        
+      - name: build image
+        run: docker build -t test-python-app .
+
+      - name: create container
+        run: docker run --rm test-python-app
