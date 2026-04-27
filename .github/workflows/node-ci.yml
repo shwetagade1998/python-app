@@ -17,7 +17,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node-api/node_modules
-          key: ${{ runner.os }}-node-${{hastFiles('node-api/package.json') }}
+          key: ${{ runner.os }}-node-${{hashFiles('node-api/package.json') }}
 
       - name: build docker image
         run: docker build -t my-node-app .
