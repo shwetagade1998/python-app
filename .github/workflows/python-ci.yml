@@ -41,5 +41,15 @@ jobs:
       - name: build image
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/python-ci-app:latest .
 
+      - name: trivy scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+           image-ref: '${{ secrets.DOCKERHUB_USERNAME}}/python-ci-app:latest'
+           format: 'table'
+           exit-code: '1'
+           ignore-unfixed: true
+           vuln-type: 'os,library'
+           severity: 'CRITICAL,HIGH'
+           
       - name: push image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/python-ci-app:latest
